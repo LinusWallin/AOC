@@ -19,7 +19,7 @@ class InputReader:
             splitSymbol(str): Symbol to split the data of the text file by
 
         Returns:
-            list: input list for the specific problem
+            list (list[str]): input list for the specific problem
         """
         with open(f"./data/{self.day}{"DEBUG" if self.DEBUG else ""}.txt", "r") as inputFile:
             input:list[str] = inputFile.read().split(splitSymbol)
