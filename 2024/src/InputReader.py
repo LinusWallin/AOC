@@ -21,6 +21,6 @@ class InputReader:
         Returns:
             list (list[str]): input list for the specific problem
         """
-        with open(f"2023/data/Day{self.day}{'DEBUG' if self.DEBUG else ''}.txt", "r") as inputFile:
+        with open(f"../data/Day{self.day}{'DEBUG' if self.DEBUG else ''}.txt", "r") as inputFile:
             input:list[str] = inputFile.read().split(splitSymbol)
         return input
