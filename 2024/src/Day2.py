@@ -18,14 +18,24 @@ def direction(levels, i=0):
     else:
         return -1
         
-def checkLevel(level):
-    startDir = direction(level)
+def checkLevel(levels):
+    removedLevel = False
+    startDir = direction(levels)
     if startDir == 0:
-        return 0
-    for l in range(1,len(level)-1):
-        dir = direction(level, l)
+        levels.pop(1)
+        removedLevel = True
+        startDir = direction(levels)
+    l = 1
+    while l < len(levels) - 1:
+        dir = direction(levels, l)
         if dir != startDir:
-            return 0
+            if not removedLevel:
+                levels.pop(l+1)
+                removedLevel = True
+            else:
+                return 0
+        else:
+            l += 1
     return 1
 
 def safetyCheck(data):
