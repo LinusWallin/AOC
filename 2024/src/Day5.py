@@ -35,7 +35,9 @@ def validateUpdate(rules: dict, update: list[str], fix: bool):
                             copyUpd = update.copy()
                             copyUpd[i] = update[prioIdx]
                             copyUpd[prioIdx] = update[i]
-                            valid, changed, update = validateUpdate(rules, copyUpd, True)
+                            valid, changed, update = validateUpdate(
+                                rules, copyUpd, True
+                            )
                             if valid:
                                 changed = True
                                 return True, changed, update

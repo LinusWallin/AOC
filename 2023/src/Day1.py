@@ -1,6 +1,7 @@
 from InputReader import InputReader
 import os
 
+
 def findNumbers(row):
     left = ""
     right = ""
@@ -12,6 +13,7 @@ def findNumbers(row):
             else:
                 right = char
     return left + right
+
 
 def calcSum(vals):
     return sum([int(val) for val in vals])

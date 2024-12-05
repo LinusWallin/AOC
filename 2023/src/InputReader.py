@@ -1,6 +1,6 @@
 class InputReader:
-    """A class to read AOC problem input
-    """
+    """A class to read AOC problem input"""
+
     def __init__(self, day, DEBUG):
         """Initializes arguments
 
@@ -21,6 +21,8 @@ class InputReader:
         Returns:
             list (list[str]): input list for the specific problem
         """
-        with open(f"2023/data/Day{self.day}{'DEBUG' if self.DEBUG else ''}.txt", "r") as inputFile:
-            input:list[str] = inputFile.read().split(splitSymbol)
+        with open(
+            f"2023/data/Day{self.day}{'DEBUG' if self.DEBUG else ''}.txt", "r"
+        ) as inputFile:
+            input: list[str] = inputFile.read().split(splitSymbol)
         return input
