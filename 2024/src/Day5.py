@@ -20,7 +20,8 @@ def splitInput(data: list[str]):
     return rules, updates
 
 
-def validateUpdate(rules: dict, update: list[str]):
+def validateUpdate(rules: dict, update: list[str], fix: bool):
+    changed = False
     for i, num in enumerate(update):
         try:
             keyArr = [k for k in rules.keys() if num in rules[k]]
@@ -30,17 +31,33 @@ def validateUpdate(rules: dict, update: list[str]):
                     if prioIdx < i:
                         continue
                     else:
-                        return False
+                        if fix:
+                            copyUpd = update.copy()
+                            copyUpd[i] = update[prioIdx]
+                            copyUpd[prioIdx] = update[i]
+                            valid, changed, update = validateUpdate(rules, copyUpd, True)
+                            if valid:
+                                changed = True
+                                return True, changed, update
+                        return False, changed, update
         except:
             print("Error", i)
-            return False
-    return True
+            return False, changed, update
+    return True, changed, update
 
 
-def pageNumSum(rules: dict, updates: list[list[str]]):
+def fixUpdate(rules: dict, updates: list[list[str]]):
+    return False
+
+
+def pageNumSum(rules: dict, updates: list[list[str]], fix: bool):
     numSum = 0
     for update in updates:
-        if validateUpdate(rules, update):
+        if fix:
+            valid, updateValidataion, update = validateUpdate(rules, update, True)
+        else:
+            updateValidataion, _, update = validateUpdate(rules, update, False)
+        if updateValidataion:
             centralUpdate = len(update) // 2
             numSum += int(update[centralUpdate])
     return numSum
@@ -50,4 +67,5 @@ if __name__ == "__main__":
     inputReader = InputReader(5, False)
     data = inputReader.ReadInput("\n")
     rules, updates = splitInput(data)
-    print(pageNumSum(rules, updates))
+    print(pageNumSum(rules, updates, False))
+    print(pageNumSum(rules, updates, True))
