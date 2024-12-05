@@ -1,5 +1,6 @@
 from InputReader import InputReader
 
+
 def splitInput(data: list[str]):
     rules = {}
     updates = []
@@ -18,6 +19,7 @@ def splitInput(data: list[str]):
                 updates.append(row.split(","))
     return rules, updates
 
+
 def validateUpdate(rules: dict, update: list[str]):
     for i, num in enumerate(update):
         try:
@@ -34,11 +36,12 @@ def validateUpdate(rules: dict, update: list[str]):
             return False
     return True
 
-def pageNumSum(rules:dict , updates: list[list[str]]):
+
+def pageNumSum(rules: dict, updates: list[list[str]]):
     numSum = 0
     for update in updates:
         if validateUpdate(rules, update):
-            centralUpdate = len(update)//2
+            centralUpdate = len(update) // 2
             numSum += int(update[centralUpdate])
     return numSum
 
@@ -48,4 +51,3 @@ if __name__ == "__main__":
     data = inputReader.ReadInput("\n")
     rules, updates = splitInput(data)
     print(pageNumSum(rules, updates))
-    
