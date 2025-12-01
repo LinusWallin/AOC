@@ -17,11 +17,17 @@ def getGuardDir(moveIdx: int):
     )
 
 
-def guardMovement(data: list[list[str]], movement: list[str]):
+def guardMovement(data: list[list[str]], movement: list[str], interference: bool):
     pos = np.array(findGuard(data, movement))
     guardMoveIdx = movement.index(data[pos[0]][pos[1]])
     guardDir = getGuardDir(guardMoveIdx)
-    data[pos[0]][pos[1]] = "X"
+    if interference:
+        if guardMoveIdx % 2 == 0:
+            data[pos[0]][pos[1]] = "|"
+        else:
+            data[pos[0]][pos[1]] = "-"
+    else:
+        data[pos[0]][pos[1]] = "X"
     active = True
     nextPos = pos
     while active:
@@ -32,10 +38,25 @@ def guardMovement(data: list[list[str]], movement: list[str]):
             and nextPos[1] < len(data[0])
             and nextPos[1] >= 0
         ):
-            if data[nextPos[0]][nextPos[1]] != "#":
-                data[nextPos[0]][nextPos[1]] = "X"
+            nextSpace = data[nextPos[0]][nextPos[1]]
+            if nextSpace != "#":
+                if interference:
+                    if guardMoveIdx % 2 == 0:
+                        if nextSpace == "-":
+                            data[nextPos[0]][nextPos[1]] = "+"
+                        else:
+                            data[nextPos[0]][nextPos[1]] = "|"
+                    else:
+                        if nextSpace == "|":
+                            data[nextPos[0]][nextPos[1]] = "+"
+                        else:
+                            data[nextPos[0]][nextPos[1]] = "-"
+                else:
+                    data[nextPos[0]][nextPos[1]] = "X"
             else:
                 nextPos = (nextPos - guardDir).astype(int)
+                if interference:
+                    data[nextPos[0]][nextPos[1]] = "+"
                 guardMoveIdx = (guardMoveIdx + 1) % len(movement)
                 guardDir = getGuardDir(guardMoveIdx)
         else:
@@ -50,10 +71,43 @@ def getVisitedLocations(data: list[list[str]]):
     return visited
 
 
+def possibleObstacles(data: list[list[str]]):
+    currentPairs = {}
+    for i in range(len(data)):
+        for j in range(len(data[0])):
+            if data[i][j] == "#":
+                currentPairs[f"{i}, {j}"] = []
+                if i+1 < len(data) and j+1 < len(data[0]):
+                    for k in range(j+1, len(data[0])):
+                        if data[i+1][k] == "#":
+                            currentPairs[f"{i}, {j}"].append([i+1, k])
+                if j-1 >= 0 and i+1 < len(data):
+                    for l in range(i+1, len(data)):
+                        if data[l][j-1] == "#":
+                            currentPairs[f"{i}, {j}"].append([l, j-1])
+    for obstacle in currentPairs.keys():
+        if currentPairs[obstacle] == []:
+            pass
+        else:
+            for pair in currentPairs[obstacle]:
+                pairKey = f"{pair[0]}, {pair[1]}"
+                secondPair = currentPairs[pairKey]
+                if secondPair == []:
+                    pass
+                else:
+                    print(pairKey, currentPairs[pairKey])
+
+
+
 if __name__ == "__main__":
-    inputReader = InputReader(6, False)
+    inputReader = InputReader(6, True)
     data = inputReader.ReadInput("\n")
     dataMat = [list(row) for row in data]
     movement = ["^", ">", "v", "<"]
-    positionData = guardMovement(dataMat, movement)
-    print(getVisitedLocations(positionData))
+    #positionData = guardMovement(dataMat, movement, False)
+    #print(getVisitedLocations(positionData))
+    positionData2 = guardMovement(dataMat, movement, True)
+    for row in positionData2:
+        print("".join(row))
+    possibleObstacles(positionData2)
+
